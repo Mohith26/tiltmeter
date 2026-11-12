@@ -1,0 +1,11 @@
+data/
+lake/
+*.duckdb
+*.duckdb.wal
+__pycache__/
+.pytest_cache/
+*.pyc
+.venv/
+EXPLAINER.md
+bank-entry.json
+lake_snapshot/
