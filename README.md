@@ -1,5 +1,7 @@
 # Tiltmeter
 
+[![tests](https://github.com/Mohith26/tiltmeter/actions/workflows/ci.yml/badge.svg)](https://github.com/Mohith26/tiltmeter/actions/workflows/ci.yml)
+
 I built a production-style data pipeline over real competitive-game data (2.3M rated
 games from the Lichess open database) and used the tables it produces to answer a
 player-experience question: **is tilt real?** When a player loses several games in a
