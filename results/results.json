@@ -1,0 +1,624 @@
+{
+  "source": "Lichess open database, standard rated games, monthly dumps (CC0)",
+  "months": [
+    "2013-01",
+    "2013-02",
+    "2013-03",
+    "2013-04",
+    "2013-05",
+    "2013-06",
+    "2013-07",
+    "2013-08",
+    "2013-09",
+    "2013-10"
+  ],
+  "environment": {
+    "python": "3.13.13",
+    "duckdb": "2.0.0",
+    "machine": "Darwin arm64",
+    "cpus": 18
+  },
+  "pipeline": {
+    "cold_run_seconds": 37.85,
+    "tasks_run": 42,
+    "executor": "thread",
+    "note": "excludes download; extract task only verifies and hashes the raw file",
+    "bronze_rows": 2321149,
+    "silver_rows": 2317796,
+    "quarantine_rows": 3353,
+    "fact_game_rows": 2317796,
+    "fact_player_game_rows": 4635592,
+    "dim_player_rows": 535696,
+    "dim_player_distinct_players": 53209,
+    "dim_opening_rows": 2841,
+    "dim_date_rows": 305,
+    "raw_bytes": 342809517,
+    "games_per_second": 61325,
+    "task_seconds": {
+      "extract[2013-01]": 0.009,
+      "extract[2013-02]": 0.01,
+      "extract[2013-03]": 0.013,
+      "extract[2013-04]": 0.011,
+      "extract[2013-05]": 0.011,
+      "extract[2013-06]": 0.016,
+      "extract[2013-07]": 0.021,
+      "extract[2013-08]": 0.024,
+      "extract[2013-09]": 0.025,
+      "extract[2013-10]": 0.032,
+      "bronze[2013-02]": 7.245,
+      "bronze[2013-01]": 7.309,
+      "bronze[2013-03]": 8.929,
+      "bronze[2013-04]": 9.026,
+      "bronze[2013-05]": 8.496,
+      "bronze[2013-06]": 10.828,
+      "bronze[2013-07]": 13.424,
+      "silver[2013-02]": 1.33,
+      "bronze[2013-08]": 15.199,
+      "silver[2013-01]": 0.627,
+      "silver[2013-03]": 0.52,
+      "silver[2013-04]": 0.492,
+      "silver[2013-05]": 0.454,
+      "silver[2013-06]": 0.48,
+      "silver[2013-07]": 0.462,
+      "silver[2013-08]": 0.519,
+      "gold[2013-01]": 1.164,
+      "gold[2013-02]": 0.912,
+      "bronze[2013-09]": 12.842,
+      "gold[2013-03]": 1.114,
+      "silver[2013-09]": 0.409,
+      "gold[2013-04]": 0.784,
+      "gold[2013-05]": 0.807,
+      "bronze[2013-10]": 13.586,
+      "gold[2013-06]": 1.096,
+      "silver[2013-10]": 0.363,
+      "gold[2013-07]": 0.952,
+      "gold[2013-08]": 1.294,
+      "gold[2013-09]": 1.192,
+      "gold[2013-10]": 1.316,
+      "publish": 0.111,
+      "quality": 0.222
+    }
+  },
+  "idempotency": {
+    "noop_rerun_tasks_run": 0,
+    "noop_rerun_tasks_skipped": 42,
+    "noop_rerun_seconds": 0.828,
+    "forced_rebuild_seconds": 39.62,
+    "forced_rebuild_tasks_run": 42,
+    "forced_rebuild_row_diff_total": 0,
+    "tables_compared": 8,
+    "partitions_compared": 80
+  },
+  "restatement": {
+    "simulated": true,
+    "scenario": "2013-08 dump re-published with every 100th game removed (3256 games)",
+    "games_removed": 3256,
+    "tasks_run": [
+      "extract[2013-08]",
+      "bronze[2013-08]",
+      "silver[2013-08]",
+      "gold[2013-08]",
+      "gold[2013-09]",
+      "gold[2013-10]",
+      "publish",
+      "quality"
+    ],
+    "tasks_skipped": 34,
+    "months_with_changed_rows": [
+      "2013-08",
+      "2013-09",
+      "2013-10"
+    ],
+    "months_untouched_row_diff": 0,
+    "changed_rows_by_table": {
+      "bronze.games": 647794,
+      "silver.games": 647045,
+      "silver.quarantine": 749,
+      "gold.fact_game": 20437,
+      "gold.fact_player_game": 1754240,
+      "gold.tier_events": 1224,
+      "gold._state_player": 5297,
+      "gold._state_perf": 20452
+    },
+    "fact_game_rows_changed_by_month": {
+      "2013-08": 15929,
+      "2013-09": 3270,
+      "2013-10": 1238
+    },
+    "fact_player_game_rows_changed_by_month": {
+      "2013-08": 626878,
+      "2013-09": 594570,
+      "2013-10": 532792
+    },
+    "gold_months_restated": [
+      "2013-08",
+      "2013-09",
+      "2013-10"
+    ],
+    "restore_tasks_run": 8,
+    "restore_row_diff_total": 0
+  },
+  "quality": {
+    "checks": [
+      {
+        "check": "pk_fact_game",
+        "dimension": "uniqueness",
+        "severity": "fail",
+        "offending_rows": 0,
+        "status": "pass"
+      },
+      {
+        "check": "pk_fact_player_game",
+        "dimension": "uniqueness",
+        "severity": "fail",
+        "offending_rows": 0,
+        "status": "pass"
+      },
+      {
+        "check": "pk_dim_player",
+        "dimension": "uniqueness",
+        "severity": "fail",
+        "offending_rows": 0,
+        "status": "pass"
+      },
+      {
+        "check": "ri_player_sk",
+        "dimension": "referential_integrity",
+        "severity": "fail",
+        "offending_rows": 0,
+        "status": "pass"
+      },
+      {
+        "check": "ri_game_player_sks",
+        "dimension": "referential_integrity",
+        "severity": "fail",
+        "offending_rows": 0,
+        "status": "pass"
+      },
+      {
+        "check": "ri_opening_key",
+        "dimension": "referential_integrity",
+        "severity": "fail",
+        "offending_rows": 0,
+        "status": "pass"
+      },
+      {
+        "check": "ri_date_key",
+        "dimension": "referential_integrity",
+        "severity": "fail",
+        "offending_rows": 0,
+        "status": "pass"
+      },
+      {
+        "check": "two_rows_per_game",
+        "dimension": "referential_integrity",
+        "severity": "fail",
+        "offending_rows": 0,
+        "status": "pass"
+      },
+      {
+        "check": "scd2_one_current_version",
+        "dimension": "consistency",
+        "severity": "fail",
+        "offending_rows": 0,
+        "status": "pass"
+      },
+      {
+        "check": "scd2_point_in_time",
+        "dimension": "consistency",
+        "severity": "fail",
+        "offending_rows": 0,
+        "status": "pass"
+      },
+      {
+        "check": "row_conservation",
+        "dimension": "completeness",
+        "severity": "fail",
+        "offending_rows": 0,
+        "status": "pass"
+      },
+      {
+        "check": "quarantined_rows",
+        "dimension": "validity",
+        "severity": "warn",
+        "offending_rows": 3353,
+        "status": "warn"
+      },
+      {
+        "check": "missing_rating_diff",
+        "dimension": "completeness",
+        "severity": "warn",
+        "offending_rows": 0,
+        "status": "pass"
+      },
+      {
+        "check": "missing_month_partition",
+        "dimension": "completeness",
+        "severity": "fail",
+        "offending_rows": 0,
+        "status": "pass"
+      },
+      {
+        "check": "days_without_games",
+        "dimension": "completeness",
+        "severity": "warn",
+        "offending_rows": 0,
+        "status": "pass"
+      },
+      {
+        "check": "rating_continuity_break",
+        "dimension": "consistency",
+        "severity": "warn",
+        "offending_rows": 227220,
+        "status": "warn"
+      },
+      {
+        "check": "rating_change_sign_mismatch",
+        "dimension": "accuracy",
+        "severity": "warn",
+        "offending_rows": 414,
+        "status": "warn"
+      },
+      {
+        "check": "decisive_result_zero_moves",
+        "dimension": "validity",
+        "severity": "warn",
+        "offending_rows": 815,
+        "status": "warn"
+      },
+      {
+        "check": "late_arriving_games",
+        "dimension": "timeliness",
+        "severity": "warn",
+        "offending_rows": 4635,
+        "status": "warn"
+      },
+      {
+        "check": "out_of_order_vs_carried_state",
+        "dimension": "timeliness",
+        "severity": "warn",
+        "offending_rows": 0,
+        "status": "pass"
+      }
+    ],
+    "n_checks": 20,
+    "n_hard_checks": 12,
+    "n_fail": 0,
+    "n_warn": 5,
+    "continuity_checkable_rows": 4540952,
+    "quarantine_by_rule": {
+      "q_rating_range": 3353,
+      "q_ratings_present": 3353
+    },
+    "warn_flags_by_rule": {
+      "w_abnormal_termination": 63,
+      "w_late_arrival": 4635,
+      "w_missing_opening": 74,
+      "w_no_moves": 1367
+    },
+    "max_late_arrival_hours": 2.0,
+    "continuity_break_rate": 0.05
+  },
+  "benchmark": {
+    "question": "Blitz games in June 2013 (UTC): count and white score by opening family, top 10",
+    "answers_identical_across_methods": true,
+    "top_family": "Sicilian Defense",
+    "top_family_games": 10236,
+    "seconds": {
+      "raw_scan_all_files": 26.7979,
+      "raw_scan_2_files": 5.9463,
+      "parquet_flat_unpartitioned": 0.007,
+      "gold_partitioned": 0.0051
+    },
+    "speedup_gold_vs_raw_all": 5239.7,
+    "speedup_gold_vs_raw_2_files": 1162.7,
+    "speedup_gold_vs_flat_parquet": 1.36,
+    "repetitions": {
+      "raw_scan_all_files": 1,
+      "raw_scan_2_files": 3,
+      "parquet": 5
+    }
+  },
+  "analysis": {
+    "sample": {
+      "player_games": 3885134,
+      "players": 14072,
+      "session_gap_minutes": 45,
+      "bootstrap_reps": 500,
+      "excludes": "Correspondence games; each player's first 20 games in a speed (provisional rating)"
+    },
+    "tilt": {
+      "by_prior_loss_streak": [
+        {
+          "prior_losses": 0,
+          "same_session": {
+            "games": 1640197,
+            "mean_resid": 0.00169,
+            "ci95": [
+              0.00092,
+              0.00238
+            ]
+          },
+          "after_break": {
+            "games": 405352,
+            "mean_resid": -0.00371,
+            "ci95": [
+              -0.00513,
+              -0.0024
+            ]
+          },
+          "tilt_effect_same_minus_break": 0.0054,
+          "tilt_effect_ci95": [
+            0.00393,
+            0.00701
+          ]
+        },
+        {
+          "prior_losses": 1,
+          "same_session": {
+            "games": 664004,
+            "mean_resid": 0.0032,
+            "ci95": [
+              0.00215,
+              0.00424
+            ]
+          },
+          "after_break": {
+            "games": 198336,
+            "mean_resid": 0.00127,
+            "ci95": [
+              -0.00065,
+              0.0034
+            ]
+          },
+          "tilt_effect_same_minus_break": 0.00192,
+          "tilt_effect_ci95": [
+            -0.00042,
+            0.00424
+          ]
+        },
+        {
+          "prior_losses": 2,
+          "same_session": {
+            "games": 323129,
+            "mean_resid": 0.00577,
+            "ci95": [
+              0.00419,
+              0.00733
+            ]
+          },
+          "after_break": {
+            "games": 104116,
+            "mean_resid": 0.00695,
+            "ci95": [
+              0.00428,
+              0.00936
+            ]
+          },
+          "tilt_effect_same_minus_break": -0.00118,
+          "tilt_effect_ci95": [
+            -0.00436,
+            0.002
+          ]
+        },
+        {
+          "prior_losses": 3,
+          "same_session": {
+            "games": 171313,
+            "mean_resid": 0.01122,
+            "ci95": [
+              0.009,
+              0.01342
+            ]
+          },
+          "after_break": {
+            "games": 55051,
+            "mean_resid": 0.01353,
+            "ci95": [
+              0.00955,
+              0.01739
+            ]
+          },
+          "tilt_effect_same_minus_break": -0.0023,
+          "tilt_effect_ci95": [
+            -0.00677,
+            0.00198
+          ]
+        },
+        {
+          "prior_losses": 4,
+          "same_session": {
+            "games": 94901,
+            "mean_resid": 0.01245,
+            "ci95": [
+              0.00949,
+              0.01548
+            ]
+          },
+          "after_break": {
+            "games": 30237,
+            "mean_resid": 0.01364,
+            "ci95": [
+              0.00819,
+              0.01872
+            ]
+          },
+          "tilt_effect_same_minus_break": -0.00119,
+          "tilt_effect_ci95": [
+            -0.00644,
+            0.00502
+          ]
+        },
+        {
+          "prior_losses": "5+",
+          "same_session": {
+            "games": 151928,
+            "mean_resid": 0.01155,
+            "ci95": [
+              0.00899,
+              0.01423
+            ]
+          },
+          "after_break": {
+            "games": 46570,
+            "mean_resid": 0.01955,
+            "ci95": [
+              0.01558,
+              0.02369
+            ]
+          },
+          "tilt_effect_same_minus_break": -0.008,
+          "tilt_effect_ci95": [
+            -0.01262,
+            -0.00321
+          ]
+        }
+      ],
+      "headline": {
+        "definition": "same-session games after >=3 consecutive losses vs same-session games whose previous game was not a loss; outcome = score - Elo expected score",
+        "streak3_games": 418142,
+        "baseline_games": 1640197,
+        "streak3_mean_resid": 0.01162,
+        "baseline_mean_resid": 0.00169,
+        "difference": 0.00993,
+        "difference_ci95": [
+          0.00802,
+          0.01157
+        ],
+        "difference_pct_points": 0.99
+      }
+    },
+    "session_end": {
+      "win": {
+        "games": 1909905,
+        "p_session_ends": 0.2041,
+        "ci95": [
+          0.19893,
+          0.20927
+        ]
+      },
+      "draw": {
+        "games": 125500,
+        "p_session_ends": 0.232,
+        "ci95": [
+          0.22547,
+          0.23861
+        ]
+      },
+      "loss1": {
+        "games": 855632,
+        "p_session_ends": 0.2384,
+        "ci95": [
+          0.23169,
+          0.24443
+        ]
+      },
+      "loss2": {
+        "games": 423626,
+        "p_session_ends": 0.2527,
+        "ci95": [
+          0.24571,
+          0.25902
+        ]
+      },
+      "loss3": {
+        "games": 224247,
+        "p_session_ends": 0.2536,
+        "ci95": [
+          0.24615,
+          0.26029
+        ]
+      },
+      "loss4": {
+        "games": 124063,
+        "p_session_ends": 0.2526,
+        "ci95": [
+          0.24535,
+          0.25982
+        ]
+      },
+      "loss5": {
+        "games": 196576,
+        "p_session_ends": 0.2474,
+        "ci95": [
+          0.23849,
+          0.25587
+        ]
+      },
+      "loss3_vs_win_ratio": 1.242,
+      "loss3_minus_win_pct_points": 4.95,
+      "loss3_minus_win_ci95": [
+        4.41242,
+        5.45108
+      ]
+    },
+    "calibration": {
+      "deciles": [
+        {
+          "expected_bucket": "0.0-0.1",
+          "games": 71254,
+          "mean_expected": 0.0624,
+          "mean_observed": 0.1172
+        },
+        {
+          "expected_bucket": "0.1-0.2",
+          "games": 152807,
+          "mean_expected": 0.1541,
+          "mean_observed": 0.2211
+        },
+        {
+          "expected_bucket": "0.2-0.3",
+          "games": 225195,
+          "mean_expected": 0.2528,
+          "mean_observed": 0.3152
+        },
+        {
+          "expected_bucket": "0.3-0.4",
+          "games": 303650,
+          "mean_expected": 0.3517,
+          "mean_observed": 0.4006
+        },
+        {
+          "expected_bucket": "0.4-0.5",
+          "games": 357952,
+          "mean_expected": 0.4506,
+          "mean_observed": 0.4803
+        },
+        {
+          "expected_bucket": "0.5-0.6",
+          "games": 371415,
+          "mean_expected": 0.5489,
+          "mean_observed": 0.5601
+        },
+        {
+          "expected_bucket": "0.6-0.7",
+          "games": 320656,
+          "mean_expected": 0.6485,
+          "mean_observed": 0.6398
+        },
+        {
+          "expected_bucket": "0.7-0.8",
+          "games": 248006,
+          "mean_expected": 0.7476,
+          "mean_observed": 0.7225
+        },
+        {
+          "expected_bucket": "0.8-0.9",
+          "games": 175704,
+          "mean_expected": 0.8463,
+          "mean_observed": 0.8081
+        },
+        {
+          "expected_bucket": "0.9-1.0",
+          "games": 87018,
+          "mean_expected": 0.9381,
+          "mean_observed": 0.9004
+        }
+      ],
+      "expected_calibration_error": 0.0332,
+      "brier_elo": 0.2068,
+      "brier_coinflip_baseline": 0.2421,
+      "share_games_rating_gap_over_200": 0.2839
+    }
+  }
+}
