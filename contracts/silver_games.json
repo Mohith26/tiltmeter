@@ -1,0 +1,38 @@
+{
+  "dataset": "silver.games",
+  "grain": "one row per Lichess game id",
+  "primary_key": ["game_id"],
+  "partition": "month (the source dump month, not the game date)",
+  "columns": {
+    "game_id": "VARCHAR NOT NULL, 8 alphanumeric chars from the game URL",
+    "month": "VARCHAR NOT NULL, YYYY-MM of the source dump",
+    "speed": "VARCHAR NOT NULL, one of Bullet|Blitz|Classical|Correspondence",
+    "is_tournament": "BOOLEAN NOT NULL",
+    "white_id": "VARCHAR NOT NULL, lowercased username (Lichess names are case-insensitive)",
+    "black_id": "VARCHAR NOT NULL",
+    "start_ts": "TIMESTAMP NOT NULL, UTC",
+    "white_elo": "INTEGER NOT NULL, pre-game rating in this speed",
+    "black_elo": "INTEGER NOT NULL",
+    "white_rating_diff": "INTEGER NULL, rating change from this game",
+    "black_rating_diff": "INTEGER NULL",
+    "white_score": "DOUBLE NOT NULL, 1 | 0.5 | 0",
+    "base_seconds": "INTEGER NULL (NULL for correspondence)",
+    "increment_seconds": "INTEGER NULL"
+  },
+  "rules": [
+    {"id": "q_game_id_format", "severity": "quarantine", "pass_if": "regexp_full_match(coalesce(game_id,''), '[A-Za-z0-9]{8}')", "why": "primary key must be a valid Lichess id"},
+    {"id": "q_result_valid", "severity": "quarantine", "pass_if": "result IN ('1-0','0-1','1/2-1/2')", "why": "unfinished or unknown results cannot be scored"},
+    {"id": "q_ratings_present", "severity": "quarantine", "pass_if": "white_elo IS NOT NULL AND black_elo IS NOT NULL", "why": "rating gap is required for every downstream metric"},
+    {"id": "q_rating_range", "severity": "quarantine", "pass_if": "white_elo BETWEEN 100 AND 4000 AND black_elo BETWEEN 100 AND 4000", "why": "physically implausible ratings"},
+    {"id": "q_players_present", "severity": "quarantine", "pass_if": "coalesce(white_id,'') <> '' AND coalesce(black_id,'') <> ''", "why": "player keys are required"},
+    {"id": "q_self_play", "severity": "quarantine", "pass_if": "white_id IS DISTINCT FROM black_id", "why": "a player cannot play themselves"},
+    {"id": "q_timestamp", "severity": "quarantine", "pass_if": "start_ts IS NOT NULL", "why": "ordering and sessions need a start time"},
+    {"id": "q_speed_known", "severity": "quarantine", "pass_if": "speed IN ('Bullet','Blitz','Classical','Correspondence')", "why": "ratings are tracked per speed"},
+    {"id": "q_duplicate_game_id", "severity": "quarantine", "pass_if": "dup_rank = 1", "why": "exactly one row per game"},
+    {"id": "w_missing_rating_diff", "severity": "warn", "pass_if": "white_rating_diff IS NOT NULL AND black_rating_diff IS NOT NULL", "why": "rating change missing; continuity cannot be checked for this game"},
+    {"id": "w_no_moves", "severity": "warn", "pass_if": "num_moves > 0", "why": "a decisive result was recorded before any move was played"},
+    {"id": "w_late_arrival", "severity": "warn", "pass_if": "strftime(start_ts, '%Y-%m') = month", "why": "game date falls outside its dump month (late-arriving record)"},
+    {"id": "w_abnormal_termination", "severity": "warn", "pass_if": "termination IN ('Normal','Time forfeit')", "why": "abandoned or rules-infraction games"},
+    {"id": "w_missing_opening", "severity": "warn", "pass_if": "eco IS NOT NULL AND eco <> '?'", "why": "opening unknown"}
+  ]
+}
